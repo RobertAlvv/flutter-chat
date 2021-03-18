@@ -34,7 +34,7 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
           title: Column(
             children: [
               CircleAvatar(
-                child: Text('An'),
+                child: Text('Pe'),
                 backgroundColor: Colors.blue[100],
                 maxRadius: 15,
               ),
@@ -42,7 +42,7 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                 height: 3,
               ),
               Text(
-                'Anabel Sandoval',
+                'Pedro Alcantara',
                 style: TextStyle(color: Colors.black87, fontSize: 15),
               )
             ],

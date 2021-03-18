@@ -1,5 +1,7 @@
 import 'package:chat_app/models/usuario.dart';
+import 'package:chat_app/services/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class UsuariosPage extends StatefulWidget {
@@ -8,28 +10,38 @@ class UsuariosPage extends StatefulWidget {
 }
 
 class _UsuariosPageState extends State<UsuariosPage> {
-  RefreshController _refreshController = RefreshController(initialRefresh: false);
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
 
   final List<Usuario> usuarios = [
-    Usuario(uid: '1', name: 'Pedro', email: 'test1@test.com', online: true),
-    Usuario(uid: '2', name: 'Ana', email: 'test2@test.com', online: false),
-    Usuario(uid: '3', name: 'Josefina', email: 'test3@test.com', online: true),
+    Usuario(uid: '1', nombre: 'Pedro', email: 'test1@test.com', online: true),
+    Usuario(uid: '2', nombre: 'Ana', email: 'test2@test.com', online: false),
+    Usuario(
+        uid: '3', nombre: 'Josefina', email: 'test3@test.com', online: true),
   ];
 
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 1,
-        leading: Icon(
-          Icons.exit_to_app,
-          color: Colors.black87,
+        leading: IconButton(
+          icon: Icon(
+            Icons.exit_to_app,
+            color: Colors.black87,
+          ),
+          onPressed: () async {
+            Navigator.pushReplacementNamed(context, 'login');
+            await authService.logout();
+          },
         ),
         centerTitle: true,
         title: Text(
-          'Mi Nombre',
-          style: TextStyle(color: Colors.black87),
+          authService.usuario.nombre,
+          style: TextStyle(color: Colors.black87, fontSize: 18),
         ),
         actions: [
           Container(
@@ -47,7 +59,6 @@ class _UsuariosPageState extends State<UsuariosPage> {
           waterDropColor: Colors.blue[400],
         ),
         child: _usuariosListView(),
-        
       ),
     );
   }
@@ -65,10 +76,10 @@ class _UsuariosPageState extends State<UsuariosPage> {
     return ListTile(
       leading: CircleAvatar(
         child: Text(
-          usuario.name.substring(0, 2),
+          usuario.nombre.substring(0, 2),
         ),
       ),
-      title: Text(usuario.name),
+      title: Text(usuario.nombre),
       subtitle: Text(usuario.email),
       trailing: Container(
         height: 10,

@@ -1,9 +1,12 @@
+import 'package:chat_app/services/auth_service.dart';
 import 'package:chat_app/widgets/custom_raised_buttom.dart';
+import 'package:chat_app/widgets/custom_show_dialog.dart';
 import 'package:flutter/material.dart';
 
 import 'package:chat_app/widgets/custom_input.dart';
 import 'package:chat_app/widgets/labels.dart';
 import 'package:chat_app/widgets/logo.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget {
   @override
@@ -52,6 +55,7 @@ class __FormState extends State<_Form> {
 
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 50),
       margin: EdgeInsets.only(top: 40),
@@ -73,9 +77,18 @@ class __FormState extends State<_Form> {
           CustomRaisedButton(
             color: Colors.blue,
             text: 'Ingrese',
-            onPressed: (){
-              print(emailCtrl.text);
-              print(passwordCtrl.text);
+            onPressed: authService.autenticando ? null : () async {
+             final loginCorrect = await authService.login(emailCtrl.text, passwordCtrl.text);
+             FocusScope.of(context).unfocus();
+             emailCtrl.clear();
+             passwordCtrl.clear();
+             
+             if(loginCorrect){
+               //TODO: Navegar en la aplicacion
+               Navigator.pushReplacementNamed(context, 'usuarios');
+             }else{
+               CustomShowDialog(context, 'Error de Conexion', 'Confirma tus credenciales');
+             }
             },
           ),
         ],
