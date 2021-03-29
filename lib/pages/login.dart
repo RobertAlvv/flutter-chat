@@ -1,4 +1,5 @@
 import 'package:chat_app/services/auth_service.dart';
+import 'package:chat_app/services/socket_service.dart';
 import 'package:chat_app/widgets/custom_raised_buttom.dart';
 import 'package:chat_app/widgets/custom_show_dialog.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +56,10 @@ class __FormState extends State<_Form> {
 
   @override
   Widget build(BuildContext context) {
+  
     final authService = Provider.of<AuthService>(context);
+    final socketService = Provider.of<SocketService>(context);
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 50),
       margin: EdgeInsets.only(top: 40),
@@ -84,7 +88,7 @@ class __FormState extends State<_Form> {
              passwordCtrl.clear();
              
              if(loginCorrect){
-               //TODO: Navegar en la aplicacion
+               socketService.connect();
                Navigator.pushReplacementNamed(context, 'usuarios');
              }else{
                CustomShowDialog(context, 'Error de Conexion', 'Confirma tus credenciales');
